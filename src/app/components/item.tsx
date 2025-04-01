@@ -1,6 +1,6 @@
 
-import { ContactModel, ContactType } from "@/models/contacts.model";
-import { ItemModel, ItemSettings, ItemSettingsModel, ItemTypes } from "@/models/item.model";
+import { ContactModel, ContactType } from "@/app/models/contacts.model";
+import { ItemModel, ItemSettings, ItemSettingsModel, ItemTypes } from "@/app/models/item.model";
 import Image from "next/image";
 
 export default function Item({ item }: { item: ItemModel }) {
