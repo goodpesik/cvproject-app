@@ -1,7 +1,6 @@
 
 import axios from 'axios';
 import { COOKIE_AUTH, deleteCookie, getCookie } from '../helpers/cookie.helper';
-import Router from 'next/router';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -24,10 +23,7 @@ api.interceptors.response.use(
       const status = error.response?.status;
   
       if (status === 403 || status === 401) {
-        if (typeof window !== 'undefined') {
-          deleteCookie(COOKIE_AUTH, window.location.hostname);
-          Router.push('/');
-        }
+        error.isAuthError = true;
       }
   
       return Promise.reject(error);

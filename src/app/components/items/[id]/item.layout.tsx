@@ -272,37 +272,37 @@ interface ItemPageProps {
 
     const contentRef = useRef(null);
   
-  const exportToPDF = async () => {
-    const element = contentRef.current;
-    if (element) {
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        allowTaint: false,
-        backgroundColor: null
-      });
-      const imgData = canvas.toDataURL('image/png');
+    const exportToPDF = async () => {
+      const element = contentRef.current;
+      if (element) {
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          allowTaint: false,
+          backgroundColor: null
+        });
+        const imgData = canvas.toDataURL('image/png');
 
 
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let position = 0;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210;
+        const pageHeight = 297;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let position = 0;
 
-      while (position < imgHeight) {
-        pdf.addImage(imgData, 'PNG', 0, position * -1, imgWidth, imgHeight);
-        position += pageHeight;
-        if (position < imgHeight) pdf.addPage();
+        while (position < imgHeight) {
+          pdf.addImage(imgData, 'PNG', 0, position * -1, imgWidth, imgHeight);
+          position += pageHeight;
+          if (position < imgHeight) pdf.addPage();
+        }
+
+        pdf.save('page.pdf');
       }
-
-      pdf.save('page.pdf');
-    }
-  };
+    };
   
      <>
-        <div ref={contentRef} className="flex main-container">
+        <div ref={contentRef} className="flex">
           <aside className="flex flex-col sidebar">
             <div className="image">
               <Image

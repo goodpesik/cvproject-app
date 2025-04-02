@@ -1,11 +1,13 @@
 'use client'
 
+import { useEffect } from "react";
 import { LoginComponent } from "./components/login";
 import { UserPageComponent } from "./components/user.page";
 import { useUser } from "./context/user.context";
-import { COOKIE_AUTH, getCookie } from "./helpers/cookie.helper";
+import { COOKIE_AUTH, deleteCookie, getCookie } from "./helpers/cookie.helper";
 import { IUserModel } from "./models/user.model";
 import { apiGetUser } from "./service/api.service";
+import Router from 'next/router';
 
 
 export default function Home() {
@@ -18,15 +20,18 @@ export default function Home() {
       if (authCookie) {
         let paredUser = JSON.parse(authCookie);
 
-        try {
-          const userResult = await apiGetUser(paredUser.uid);
-          if (userResult.status === 200) {
-            setUser(paredUser);
-          }
-        } catch (error) {
-          throw new Error(error as string);
-          
-        }
+        useEffect(() => {
+          apiGetUser(paredUser.uid).then((userResult) => {
+            if (userResult.data.length) {
+              setUser(paredUser);
+            }
+          }).catch((error) => {
+            if (error.isAuthError) {
+              deleteCookie(COOKIE_AUTH, window.location.hostname);
+              Router.push('/');
+            }
+          })
+        }, []);
       }
     }
   }
@@ -50,6 +55,10 @@ export default function Home() {
   checkAuth(user);
 
   return (
-      getContent()
+    <>
+      <div className="flex main-container">
+        {getContent()}
+      </div>
+    </>
   );
 }
