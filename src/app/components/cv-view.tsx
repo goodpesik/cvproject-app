@@ -19,7 +19,7 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
         router.push('/');
     };
     const downloadPdf = async () => {
-        const blob = await apiDownloadPdf(`${window.location.origin}/${window.location.pathname}`);
+        const blob = await apiDownloadPdf(`${window.location.origin}${window.location.pathname}`);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

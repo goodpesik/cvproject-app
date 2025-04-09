@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { COOKIE_AUTH, getCookie } from '../helpers/cookie.helper';
-import { useApiLoaderStore } from './stores/apiLoaderStore';
+import { ErrorStateTypes, useApiLoaderStore } from './stores/apiLoaderStore';
 
 declare module 'axios' {
   export interface AxiosRequestConfig {
@@ -57,9 +57,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
+    const msg = error.response?.data?.message;
 
     if (status === 403 || status === 401) {
       error.isAuthError = true;
+      if (store) store.getState().error(ErrorStateTypes.Login, msg);
+    } else {
+      if (store) store.getState().error(ErrorStateTypes.Other, msg);
     }
 
     return Promise.reject(error);

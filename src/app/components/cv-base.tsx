@@ -14,23 +14,33 @@ export function CVBase({ cvData }: CVBaseProps) {
     const sideItemsList: ItemModel[] = [
         {
             type: ItemTypes.Contacts,
-            contacts: cvData.items.contacts
+            contacts: cvData.items.contacts,
+            isShown: !!cvData.items.contacts?.length
         },
           {
             type: ItemTypes.Skills,
             skills: cvData.items.skills,
+            isShown: !!cvData.items.skills?.length
           },
           {
             type: ItemTypes.Languages,
             languages: cvData.items.languages,
+            isShown: !!cvData.items.languages?.length
           },
           {
             type: ItemTypes.Education,
             education: cvData.items.education,
+            isShown: !!cvData.items.education?.length
+          },
+          {
+            type: ItemTypes.Certifications,
+            certifications: cvData.items.certifications,
+            isShown: !!cvData.items.certifications?.length
           },
           {
             type: ItemTypes.Hobby,
             hobby: cvData.items.hobby,
+            isShown: !!cvData.items.hobby?.length
           },
     ];
 
@@ -38,14 +48,17 @@ export function CVBase({ cvData }: CVBaseProps) {
       {
         type: ItemTypes.Position,
         positionDescription: cvData.items.positionDescription,
+        isShown: cvData.items.positionDescription !== ''
       },
       {
         type: ItemTypes.Summary,
         summaryDescription: cvData.items.summaryDescription,
+        isShown: cvData.items.summaryDescription !== ''
       },
       {
         type: ItemTypes.Experience,
         experience: cvData.items.experience,
+        isShown: !!cvData.items.experience?.length
       },
     ];
 
@@ -77,14 +90,22 @@ export function CVBase({ cvData }: CVBaseProps) {
                     <span className="firstname">{cvData.firstName}</span>
                 </h1>
                 </div>
-                {sideItemsList.map((item, i) => (
-                <Item key={i} item={item} />
-                ))}
+                {sideItemsList.map((item, i) => {
+                  if (item.isShown) {
+                    return (<Item key={i} item={item} />)
+                  } else {
+                    return '';
+                  }
+                })}
             </aside>
             <main className="flex flex-col main">
-                {mainItemsList.map((item, i) => (
-                <Item key={i} item={item} />
-                ))}
+                {mainItemsList.map((item, i) => {
+                   if (item.isShown) {
+                    return (<Item key={i} item={item} />)
+                  } else {
+                    return '';
+                  }
+                })}
             </main>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { CertificationsModel } from './certifications.model';
 import { ContactModel } from './contacts.model';
 import { EducationModel } from './education.model';
 import { ExperienceModel } from './experience.model';
@@ -13,10 +14,12 @@ export enum ItemTypes {
   Position,
   Experience,
   Summary,
+  Certifications
 }
 
 export interface ItemModel {
   type: ItemTypes;
+  isShown: boolean;
   contacts?: ContactModel[];
   skills?: SkillModel[];
   education?: EducationModel[];
@@ -24,6 +27,7 @@ export interface ItemModel {
   positionDescription?: string;
   summaryDescription?: string;
   experience?: ExperienceModel[];
+  certifications?: CertificationsModel[];
   languages?: SkillModel[];
 }
 
@@ -76,6 +80,12 @@ export const ItemSettings: ItemSettingsModel[] = [
     title: 'Work Experience',
     icon: '/icons/experience.svg',
     alt: 'Experience',
+  },
+  {
+    type: ItemTypes.Certifications,
+    title: 'Certifications',
+    icon: '/icons/cert.svg',
+    alt: 'Certifications',
   },
   {
     type: ItemTypes.Position,

@@ -2,11 +2,37 @@
 
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useApiLoaderStore } from '../lib/stores/apiLoaderStore';
+import { ErrorStateTypes, useApiLoaderStore } from '../lib/stores/apiLoaderStore';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export function ApiLoadingOverlay() {
   const loadingCount = useApiLoaderStore((state) => state.loadingCount);
+  const errorType = useApiLoaderStore((state) => state.errorState);
+  const errorMessage = useApiLoaderStore((state) => state.errMessage);
+  const clearError = useApiLoaderStore((state) => state.error);
   const isLoading = loadingCount > 0;
+  const router = useRouter();
+
+  switch (errorType) {
+    case ErrorStateTypes.Login:
+      if (errorMessage) {
+        toast(errorMessage);
+      }
+      router.push('/');
+      clearError(ErrorStateTypes.NoError);
+      break;
+    case ErrorStateTypes.Other:
+      if (errorMessage) {
+        toast(errorMessage);
+      }
+      clearError(ErrorStateTypes.NoError);
+      break;
+  
+    default:
+      break;
+  }
+ 
 
   return (
     <AnimatePresence>

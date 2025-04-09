@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, useFieldArray, Controller, FieldError } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -36,6 +36,8 @@ import { ImageSelector } from './image-selector';
 import Image from 'next/image';
 import { IMAGE_URL } from '../lib/api';
 import { ItemModel } from '../models/item.model';
+import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CVFormProps {
   isEdit: boolean;
@@ -67,7 +69,7 @@ const contactSchema = z
         ctx.addIssue({
           path: ['value'],
           code: z.ZodIssueCode.custom,
-          message: 'Invalid phone number',
+          message: 'Invalid phone number. Please use mask (+3809997788)',
         });
       }
     }
@@ -88,26 +90,44 @@ const languagesSchema = z.object({
 });
 
 const educationSchema = z.object({
-  school: z.string().min(1),
+  school: z.string().min(1, {
+    message: 'Field is required.',
+  }),
   faculty: z.string().optional(),
-  degree: z.string().min(1),
-  year: z.string().min(1),
+  degree: z.string().min(1, {
+    message: 'Field is required.',
+  }),
+  year: z.string().min(1, {
+    message: 'Field is required.',
+  }),
   city: z.string().optional(),
-  country: z.string().min(1),
+  country: z.string().optional(),
 });
 
 const hobbySchema = z.object({
-  iconId: z.string().min(1),
+  iconId: z.string().optional(),
+});
+
+const certificationsSchema = z.object({
+  details: z.string().min(1, {
+    message: 'Field is required.',
+  }),
 });
 
 const experienceSchema = z.object({
-  company: z.string().min(1),
+  company: z.string().min(1, {
+    message: 'Field is required.',
+  }),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   city: z.string().optional(),
   country: z.string().optional(),
-  role: z.string().min(1),
-  description: z.string().min(1),
+  role: z.string().min(1, {
+    message: 'Field is required.',
+  }),
+  description: z.string().min(1, {
+    message: 'Field is required.',
+  }),
 });
 
 const formSchema = z.object({
@@ -117,9 +137,12 @@ const formSchema = z.object({
   hobby: z.array(hobbySchema).optional(),
   summaryDescription: z.string().optional(),
   positionDescription: z.string().optional(),
-  name: z.string().min(1),
+  name: z.string().min(1, {
+    message: 'Field is required.',
+  }),
   experience: z.array(experienceSchema).optional(),
   languages: z.array(languagesSchema).optional(),
+  certifications: z.array(certificationsSchema).optional(),
   imageName: z.string().optional(),
   imageUrl: z.string().optional(),
   firstName: z.string().min(1),
@@ -132,27 +155,25 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
+    shouldFocusError: false,
   });
 
   const { user } = useUser();
   const router = useRouter();
   const [reloadKey, setReloadKey] = React.useState(0);
   const [currentCvData, setcurrentCvData] = React.useState<ICVDataModel | null>(null);
-  
+  const [selectedContact, setSelectedContact] = React.useState<{[key: string]: ContactType}>({});
+
+
   const {
-    watch,
     register,
     handleSubmit,
     control,
-    formState: { isValid, errors },
-  } = form;
-
-  useEffect(() => {
-    const subscription = watch(() => {
-      console.log('Errors', errors);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, isValid, errors]);
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+    shouldFocusError: false,
+  });
 
   useEffect(() => {
     if (isEdit && cvId !== '') {
@@ -211,9 +232,9 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   const hobbyArray = useFieldArray({ control, name: 'hobby' });
   const experienceArray = useFieldArray({ control, name: 'experience' });
   const languagesArray = useFieldArray({ control, name: 'languages' });
+  const certificationsArray = useFieldArray({ control, name: 'certifications' });
 
   const imageUrl = form.watch('imageUrl');
-  const imageName = form.watch('imageName');
 
   const goBack = () => {
     router.push('/');
@@ -232,6 +253,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
       summaryDescription: data.summaryDescription,
       experience: data.experience,
       languages: data.languages,
+      certifications: data.certifications
     };
     if (isEdit && currentCvData) {
       await apiUpdateCV(cvId, {
@@ -260,6 +282,16 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
 
   const getImageUrl = (url: string): string => {
     return `${IMAGE_URL}/${url}`;
+  }
+
+  const getContactPlaceholder = (type: ContactType) => {
+    switch (type) {
+      case ContactType.Phone:
+        return '+3809997788'
+    
+      default:
+        return 'Value'
+    }
   }
 
   return (
@@ -293,10 +325,46 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
         }
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <Input {...register(`name`)} placeholder="Enter CV name" />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className='tooltip-trigger'> 
+              <Input {...register(`name`)} 
+                placeholder="Enter CV name"
+                className={cn(errors.name && "border-red-500 ring-red-500 error")}
+              />
+              </TooltipTrigger>
+              {errors.name && 
+                <TooltipContent side="top" align="center">
+                  <p className="error">{errors.name?.message}</p>
+                </TooltipContent>
+              }
+            </Tooltip>
+          </TooltipProvider>
           <div className="cv-row name-section flex flex-row gap-2 border p-2">
-            <Input {...register(`firstName`)} placeholder="First Name" />
-            <Input {...register(`lastName`)} placeholder="Last Name" />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className='tooltip-trigger'> 
+                <Input {...register(`firstName`)} className={cn(errors.firstName && "border-red-500 ring-red-500 error")} placeholder="First Name" />
+              </TooltipTrigger>
+              {errors.firstName && 
+                <TooltipContent side="top" align="center">
+                  <p className="error">{errors.firstName?.message}</p>
+                </TooltipContent>
+              }
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className='tooltip-trigger'> 
+              <Input {...register(`lastName`)} className={cn(errors.lastName && "border-red-500 ring-red-500 error")} placeholder="Last Name" />
+              </TooltipTrigger>
+              {errors.lastName && 
+                <TooltipContent side="top" align="center">
+                  <p className="error">{errors.lastName?.message}</p>
+                </TooltipContent>
+              }
+            </Tooltip>
+          </TooltipProvider>
           </div>
             <Textarea {...register('summaryDescription')} placeholder="Summary description" />
             <Textarea {...register('positionDescription')} placeholder="Desired position" />
@@ -314,7 +382,14 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         name={`contacts.${i}.type`}
                         render={({ field }) => (
                           <FormItem>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={(val: ContactType) => {
+                              const selectedVal = {
+                                ...selectedContact
+                              }
+                              selectedVal[i] = val;
+                              setSelectedContact(selectedVal);
+                              field.onChange(val);
+                            }} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select contact type" />
@@ -335,7 +410,18 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         </div>
                       </div>
                       <div className="col">
-                       <Input {...register(`contacts.${i}.value`)} placeholder="value" />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                          <Input {...register(`contacts.${i}.value`)} className={cn(errors.contacts && errors.contacts[i] && "border-red-500 ring-red-500 error")} placeholder={getContactPlaceholder(selectedContact[i])} />
+                          </TooltipTrigger>
+                          {errors.contacts && errors.contacts[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.contacts[i].value?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                       </div>
                     </>
                   );
@@ -346,7 +432,16 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                 array: skillArray,
                 renderFields: (i: number) => (
                   <>
-                    <Input {...register(`skills.${i}.name`)} placeholder="Skill Name" />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className='tooltip-trigger'> <Input {...register(`skills.${i}.name`)} className={cn(errors.skills && errors.skills[i] && "border-red-500 ring-red-500 error")} placeholder="Skill Name" /></TooltipTrigger>
+                        {errors.skills && errors.skills[i] && 
+                          <TooltipContent side="top" align="center">
+                           <p className="error">{errors.skills[i].name?.message}</p>
+                         </TooltipContent>
+                        }
+                      </Tooltip>
+                    </TooltipProvider>
                     <Controller
                       name={`skills.${i}.level`}
                       control={control}
@@ -373,7 +468,18 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                 array: languagesArray,
                 renderFields: (i: number) => (
                   <>
-                    <Input {...register(`languages.${i}.name`)} placeholder="Language" />
+                    <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                          <Input {...register(`languages.${i}.name`)} className={cn(errors.languages && errors.languages[i] && "border-red-500 ring-red-500 error")} placeholder="Language" />
+                          </TooltipTrigger>
+                          {errors.languages && errors.languages[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.languages[i].name?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                     <Controller
                       name={`languages.${i}.level`}
                       control={control}
@@ -401,14 +507,48 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                 renderFields: (i: number) => (
                   <>
                     <div className="experience-section flex flex-col">
-                      <Input {...register(`experience.${i}.company`)} placeholder="Company" />
-                      <Input {...register(`experience.${i}.role`)} placeholder="Role" />
+                    <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                          <Input {...register(`experience.${i}.company`)} className={cn(errors.experience && errors.experience[i] && "border-red-500 ring-red-500 error")} placeholder="Company" />
+                          </TooltipTrigger>
+                          {errors.experience && errors.experience[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.experience[i].company?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                          <Input {...register(`experience.${i}.role`)} className={cn(errors.experience && errors.experience[i] && "border-red-500 ring-red-500 error")} placeholder="Role" />
+                          </TooltipTrigger>
+                          {errors.experience && errors.experience[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.experience[i].role?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                       <Input {...register(`experience.${i}.startDate`)} placeholder="Start year" />
                       <Input {...register(`experience.${i}.endDate`)} placeholder="End year" />
-                      <Textarea
-                        {...register(`experience.${i}.description`)}
-                        placeholder="Description"
-                      />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                              <Textarea
+                                {...register(`experience.${i}.description`)}
+                                placeholder="Description"
+                                className={cn(errors.experience && errors.experience[i] && "border-red-500 ring-red-500 error")}
+                              />
+                          </TooltipTrigger>
+                          {errors.experience && errors.experience[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.experience[i].description?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </>
                 ),
@@ -418,10 +558,63 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                 array: educationArray,
                 renderFields: (i: number) => (
                   <>
-                    <Input {...register(`education.${i}.school`)} placeholder="School" />
-                    <Input {...register(`education.${i}.degree`)} placeholder="Degree" />
-                    <Input {...register(`education.${i}.year`)} placeholder="Year" />
+                    <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                              <Input {...register(`education.${i}.school`)} className={cn(errors.education && errors.education[i] && "border-red-500 ring-red-500 error")} placeholder="School" />
+                          </TooltipTrigger>
+                          {errors.education && errors.education[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.education[i].school?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                              <Input {...register(`education.${i}.degree`)} className={cn(errors.education && errors.education[i] && "border-red-500 ring-red-500 error")} placeholder="Degree" />
+                          </TooltipTrigger>
+                          {errors.education && errors.education[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.education[i].degree?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                              <Input {...register(`education.${i}.year`)} className={cn(errors.education && errors.education[i] && "border-red-500 ring-red-500 error")} placeholder="Year" />
+                          </TooltipTrigger>
+                          {errors.education && errors.education[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.education[i].year?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                     <Input {...register(`education.${i}.country`)} placeholder="Country" />
+                  </>
+                ),
+              },
+              {
+                key: FormSectionKeysEnum.Certifications,
+                array: certificationsArray,
+                renderFields: (i: number) => (
+                  <>
+                    <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className='tooltip-trigger'> 
+                              <Textarea {...register(`certifications.${i}.details`)} className={cn(errors.certifications && errors.certifications[i] && "border-red-500 ring-red-500 error")} placeholder="Certification Details" />
+                          </TooltipTrigger>
+                          {errors.certifications && errors.certifications[i] && 
+                            <TooltipContent side="top" align="center">
+                              <p className="error">{errors.certifications[i].details?.message}</p>
+                            </TooltipContent>
+                          }
+                        </Tooltip>
+                      </TooltipProvider>
                   </>
                 ),
               },

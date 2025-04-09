@@ -111,6 +111,20 @@ export default function Item({ item }: { item: ItemModel }) {
             </ul>
           </>
         );
+      case ItemTypes.Certifications:
+        const certificationsList = item.certifications || [];
+        return (
+          <>
+            {certificationsList.map((certifications, i) => (
+              <div key={i} className="work-item container">
+                <div className="description">
+                  <p>{certifications.details}</p>
+                </div>
+              </div>
+            ))}
+          </>
+        );
+
       case ItemTypes.Hobby:
         const hobbyList = item.hobby || [];
         return (

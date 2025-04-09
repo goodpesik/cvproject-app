@@ -1,6 +1,7 @@
 export enum ContactType {
   Email = 'Email',
   Phone = 'Phone',
+  Location = 'Location',
   Text = 'Text',
   Link = 'Link',
   Instagram = 'Instagram',
@@ -25,7 +26,7 @@ export const ContactIconsSettings: {type: ContactType, icon: string, alt: string
     alt: 'email'
   },
   {
-    type: ContactType.Text,
+    type: ContactType.Location,
     icon: '/icons/location.svg',
     alt: 'Location',
   },
@@ -68,5 +69,10 @@ export const ContactIconsSettings: {type: ContactType, icon: string, alt: string
     type: ContactType.GitLab,
     icon: '/icons/gitlab.svg',
     alt: 'gitlab',
+  },
+  {
+    type: ContactType.Text,
+    icon: '/icons/text.svg',
+    alt: 'text',
   },
 ]
