@@ -122,6 +122,8 @@ const formSchema = z.object({
   languages: z.array(languagesSchema).optional(),
   imageName: z.string().optional(),
   imageUrl: z.string().optional(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -153,13 +155,15 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   }, [watch, isValid, errors]);
 
   useEffect(() => {
-    if (isEdit && cvId) {
+    if (isEdit && cvId !== '') {
       apiGetCVById(cvId).then((cvData) => {
         setcurrentCvData(cvData.data);
         form.reset({
           name: cvData.data.name,
           imageName: cvData.data.imageName,
           imageUrl: cvData.data.imageUrl,
+          firstName: cvData.data.firstName,
+          lastName: cvData.data.lastName,
           ...cvData.data.items
         } as FormValues);
       });
@@ -233,6 +237,8 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
       await apiUpdateCV(cvId, {
         ...currentCvData,
         name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         items: constructedItem as ItemModel,
       });
       toast("CV has been updated successfully");
@@ -243,6 +249,8 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
         name: data.name,
         imageName: data.imageName,
         imageUrl: data.imageUrl,
+        firstName: data.firstName,
+        lastName: data.lastName,
         createdBy: user!.id,
       } as ICVDataModel);
       toast("CV has been created successfully");
@@ -286,6 +294,10 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Input {...register(`name`)} placeholder="Enter CV name" />
+          <div className="cv-row name-section flex flex-row gap-2 border p-2">
+            <Input {...register(`firstName`)} placeholder="First Name" />
+            <Input {...register(`lastName`)} placeholder="Last Name" />
+          </div>
             <Textarea {...register('summaryDescription')} placeholder="Summary description" />
             <Textarea {...register('positionDescription')} placeholder="Desired position" />
             {[

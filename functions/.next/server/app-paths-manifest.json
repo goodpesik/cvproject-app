@@ -1,0 +1,8 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/cv-form/edit/[id]/page": "app/cv-form/edit/[id]/page.js",
+  "/cv-form/create/page": "app/cv-form/create/page.js",
+  "/cv-form/view/[id]/page": "app/cv-form/view/[id]/page.js",
+  "/page": "app/page.js"
+}

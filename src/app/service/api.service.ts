@@ -43,7 +43,7 @@ export const uploadPhoto = (image: Blob | null, isEdit: boolean, cvId: string): 
   const formData = new FormData();
   formData.append('file', image as Blob);
 
-  return api.post<ImageStatus>(`/cv-data/photo?isEdit=${isEdit}&cvId=${cvId}`, formData, {
+  return api.post<ImageStatus>(`/cv-data/photo?isEdit=${isEdit}&cvId=${cvId === '' ? 'empty' : cvId}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

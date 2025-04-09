@@ -73,8 +73,8 @@ export function CVBase({ cvData }: CVBaseProps) {
                 : ''}
                 <div className="name-box">
                 <h1>
-                    <span className="lastname">Levynets</span>
-                    <span className="firstname">Maksym</span>
+                    <span className="lastname">{cvData.lastName}</span>
+                    <span className="firstname">{cvData.firstName}</span>
                 </h1>
                 </div>
                 {sideItemsList.map((item, i) => (

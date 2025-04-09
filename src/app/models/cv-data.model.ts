@@ -8,6 +8,8 @@ export interface ICVDataModel {
   imageName?: string;
   imageUrl?: string;
   createdBy: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface ImageStatus {
