@@ -17,6 +17,10 @@
 /.next/
 /out/
 /functions/.next/
+.firebase
+/.firebase
+/.firebase/
+/.firebase/*
 
 # production
 /build

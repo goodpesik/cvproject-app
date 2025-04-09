@@ -170,10 +170,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(formSchema),
-    shouldFocusError: false,
-  });
+  } = form;
 
   useEffect(() => {
     if (isEdit && cvId !== '') {
