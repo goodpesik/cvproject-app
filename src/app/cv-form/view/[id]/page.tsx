@@ -1,18 +1,20 @@
 import { ViewCVForm } from '../../../components/cv-view';
 interface ViewCVFormPage {
-    params: {
+    params: Promise<{
       id: string;
-    };
-    searchParams: { [key: string]: string | string[] | undefined };
+    }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
   }
 
-export default async function ViewCVFormPage({ params, searchParams }: ViewCVFormPage) {
+export default async function ViewCVFormPage(props: ViewCVFormPage) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!params|| !searchParams) {
     return (
       <p>Loading...</p>
     )
   }
-  
+
   const id = params?.id as string;
   const controls = searchParams.controls === 'true';
   return (

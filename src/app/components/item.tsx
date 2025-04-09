@@ -90,8 +90,6 @@ export default function Item({ item }: { item: ItemModel }) {
           </>
         );
       case ItemTypes.Languages:
-        console.log(11111, item.languages);
-        
         return getSkillsContent(item.languages || []);
       case ItemTypes.Skills:
         return getSkillsContent(item.skills || []);

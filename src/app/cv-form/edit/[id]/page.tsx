@@ -1,12 +1,13 @@
 import CVForm from '@/app/components/cv-form';
 
 interface PageProps {
-    params: {
+    params: Promise<{
       id: string;
-    };
+    }>;
   }
 
-export default async function CreateCVFormPage({ params }: PageProps) {
+export default async function CreateCVFormPage(props: PageProps) {
+  const params = await props.params;
   if (!params) {
     return (
       <p>Loading...</p>
