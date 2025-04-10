@@ -1,3 +1,3 @@
 export interface CertificationsModel {
-    details: string;
+  details: string;
 }

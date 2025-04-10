@@ -5,9 +5,8 @@ import './tailwind.css';
 
 import { UserProvider } from './context/user.context';
 import { AuthProvider } from './context/auth-context';
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from '@/components/ui/sonner';
 import { ApiLoadingOverlay } from './components/loader';
-
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -52,7 +51,7 @@ export default function RootLayout({
           <AuthProvider>
             <ApiLoadingOverlay />
             {children}
-            </AuthProvider>
+          </AuthProvider>
         </UserProvider>
         <Toaster />
       </body>

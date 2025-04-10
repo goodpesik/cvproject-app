@@ -19,11 +19,11 @@ export interface ContactModel {
   link?: string;
 }
 
-export const ContactIconsSettings: {type: ContactType, icon: string, alt: string}[] = [
+export const ContactIconsSettings: { type: ContactType; icon: string; alt: string }[] = [
   {
     type: ContactType.Email,
     icon: '/icons/mail.svg',
-    alt: 'email'
+    alt: 'email',
   },
   {
     type: ContactType.Location,
@@ -75,4 +75,4 @@ export const ContactIconsSettings: {type: ContactType, icon: string, alt: string
     icon: '/icons/text.svg',
     alt: 'text',
   },
-]
+];

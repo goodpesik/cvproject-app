@@ -10,12 +10,10 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "target": "es2022",
-    "lib": ["es2022", "dom"], 
+    "lib": ["es2022", "dom"],
     "skipLibCheck": true,
-    "module": "commonjs", 
+    "module": "commonjs"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

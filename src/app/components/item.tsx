@@ -33,23 +33,23 @@ export default function Item({ item }: { item: ItemModel }) {
     }
   };
 
-  const getContactIcon = (type: ContactType): { url: string, alt: string} => {
-    const settings = ContactIconsSettings.find(s => s.type === type);
-
-    return {  
-      url: settings!.icon,
-      alt: settings!.alt
-    }
-  }
-
-  const getHobbyIcon = (id: string): { url: string, alt: string} => {
-    const settings = hobySettings.find(s => s.id === id);
+  const getContactIcon = (type: ContactType): { url: string; alt: string } => {
+    const settings = ContactIconsSettings.find((s) => s.type === type);
 
     return {
       url: settings!.icon,
-      alt: settings!.name
-    }
-  }
+      alt: settings!.alt,
+    };
+  };
+
+  const getHobbyIcon = (id: string): { url: string; alt: string } => {
+    const settings = hobySettings.find((s) => s.id === id);
+
+    return {
+      url: settings!.icon,
+      alt: settings!.name,
+    };
+  };
 
   const getSkillsContent = (skillList: SkillModel[]) => {
     return (
@@ -66,7 +66,7 @@ export default function Item({ item }: { item: ItemModel }) {
         </ul>
       </>
     );
-  }
+  };
 
   const getItemContent = () => {
     switch (item.type) {
@@ -84,7 +84,7 @@ export default function Item({ item }: { item: ItemModel }) {
                     </span>
                     {getText(contact)}
                   </li>
-                )
+                );
               })}
             </ul>
           </>
@@ -93,7 +93,7 @@ export default function Item({ item }: { item: ItemModel }) {
         return getSkillsContent(item.languages || []);
       case ItemTypes.Skills:
         return getSkillsContent(item.skills || []);
-        
+
       case ItemTypes.Education:
         const educationList = item.education || [];
         return (
@@ -139,7 +139,7 @@ export default function Item({ item }: { item: ItemModel }) {
                     </span>
                     <span className="text">{hobbyIcon.alt}</span>
                   </li>
-                )
+                );
               })}
             </ul>
           </>

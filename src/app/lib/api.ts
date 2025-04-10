@@ -35,7 +35,7 @@ api.interceptors.response.use(
   (error) => {
     if (store) store.getState().stop();
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.request.use(

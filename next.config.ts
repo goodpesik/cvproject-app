@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-type confProtocol = "http" | "https" | undefined;
+type confProtocol = 'http' | 'https' | undefined;
 
 const nextConfig: NextConfig = {
   images: {

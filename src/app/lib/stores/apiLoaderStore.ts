@@ -12,7 +12,7 @@ interface ApiLoaderState {
 export enum ErrorStateTypes {
   NoError,
   Login,
-  Other
+  Other,
 }
 
 export const useApiLoaderStore = create<ApiLoaderState>((set) => ({
@@ -20,13 +20,13 @@ export const useApiLoaderStore = create<ApiLoaderState>((set) => ({
   errorState: ErrorStateTypes.NoError,
   errMessage: null,
   start: () => set((state) => ({ loadingCount: state.loadingCount + 1 })),
-  stop: () => set((state) => ({
-    loadingCount: Math.max(0, state.loadingCount - 1),
-  })),
-  error: (errState, msg) => set(() => (
-    { 
+  stop: () =>
+    set((state) => ({
+      loadingCount: Math.max(0, state.loadingCount - 1),
+    })),
+  error: (errState, msg) =>
+    set(() => ({
       errorState: errState,
-      errMessage: msg
-    }
-  )),
+      errMessage: msg,
+    })),
 }));

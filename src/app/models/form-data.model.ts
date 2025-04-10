@@ -5,5 +5,5 @@ export enum FormSectionKeysEnum {
   Education = 'Education section',
   Hobby = 'Hobby section',
   Languages = 'Languages section',
-  Certifications = 'Certifications section'
+  Certifications = 'Certifications section',
 }

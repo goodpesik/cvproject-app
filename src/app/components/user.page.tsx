@@ -36,18 +36,17 @@ export const UserPageComponent = () => {
     router.push(`/cv-form/view/${cv._id}?controls=true`);
   };
 
-  const handleConfirm  = async () => {
+  const handleConfirm = async () => {
     setModalOpen(false);
 
     try {
       await apiDeleteeCV(currentCv?._id ?? '');
-      toast("CV has been deleted successfully");
+      toast('CV has been deleted successfully');
     } catch {
-      toast("Error ocurred");
+      toast('Error ocurred');
     }
-    setReloadKey(prev => prev + 1);
+    setReloadKey((prev) => prev + 1);
   };
-
 
   useEffect(() => {
     if (!user) return;
@@ -63,9 +62,6 @@ export const UserPageComponent = () => {
 
     fetchCVs();
   }, [user, reloadKey]);
-
-
-
 
   return (
     <>
@@ -90,23 +86,28 @@ export const UserPageComponent = () => {
         <Button variant="outline" onClick={handleCreate}>
           Create CV
         </Button>
-        {cvList.length !== 0 && cvList.map((cv) => (
-          <div key={cv.id} className="cv-list">
-            <div className="cv-item flex flex-row">
-              <span>{cv.name}</span>
-              <Button variant="outline" onClick={() => handleEdit(cv)}>
-                Edit CV
-              </Button>
-              <Button variant="outline" onClick={() => handleView(cv)}>
-                View CV
-              </Button>
-              <Button variant="outline" onClick={() => handleRemove(cv)}>
-                Remove CV
-              </Button>
-              <ConfirmationModal open={modalOpen} onOpenChange={setModalOpen} onContinue={handleConfirm} />
+        {cvList.length !== 0 &&
+          cvList.map((cv) => (
+            <div key={cv.id} className="cv-list">
+              <div className="cv-item flex flex-row">
+                <span>{cv.name}</span>
+                <Button variant="outline" onClick={() => handleEdit(cv)}>
+                  Edit CV
+                </Button>
+                <Button variant="outline" onClick={() => handleView(cv)}>
+                  View CV
+                </Button>
+                <Button variant="outline" onClick={() => handleRemove(cv)}>
+                  Remove CV
+                </Button>
+                <ConfirmationModal
+                  open={modalOpen}
+                  onOpenChange={setModalOpen}
+                  onContinue={handleConfirm}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   );

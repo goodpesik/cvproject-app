@@ -1,10 +1,10 @@
 'use client';
 
-
 import { AnimatePresence, motion } from 'framer-motion';
 import { ErrorStateTypes, useApiLoaderStore } from '../lib/stores/apiLoaderStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useUser } from '../context/user.context';
 
 export function ApiLoadingOverlay() {
   const loadingCount = useApiLoaderStore((state) => state.loadingCount);
@@ -13,6 +13,7 @@ export function ApiLoadingOverlay() {
   const clearError = useApiLoaderStore((state) => state.error);
   const isLoading = loadingCount > 0;
   const router = useRouter();
+  const { setUser } = useUser();
 
   switch (errorType) {
     case ErrorStateTypes.Login:
@@ -20,6 +21,7 @@ export function ApiLoadingOverlay() {
         toast(errorMessage);
       }
       router.push('/');
+      setUser(null);
       clearError(ErrorStateTypes.NoError);
       break;
     case ErrorStateTypes.Other:
@@ -28,11 +30,10 @@ export function ApiLoadingOverlay() {
       }
       clearError(ErrorStateTypes.NoError);
       break;
-  
+
     default:
       break;
   }
- 
 
   return (
     <AnimatePresence>

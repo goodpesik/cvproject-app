@@ -14,7 +14,7 @@ export enum ItemTypes {
   Position,
   Experience,
   Summary,
-  Certifications
+  Certifications,
 }
 
 export interface ItemModel {
