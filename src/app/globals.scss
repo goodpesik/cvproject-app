@@ -2,18 +2,43 @@ body {
   font-family: 'Source Code Pro', monospace;
 }
 
+// Header
+
+.header {
+  display: block;
+  margin-bottom: 20px;
+  width: 100%;
+
+  .logo {
+    align-items: center;
+
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      margin: 0 0 0 20px;
+    }
+  }
+}
+
+.wide-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+// Landing
+
+.landing-page {
+  width: 100%;
+}
+
 button {
   cursor: pointer;
 }
 
 .loader {
   background-color: hsla(0, 0%, 0%, 0.6);
-}
-
-.main-container {
-  width: 1024px;
-  margin: 0 auto;
-  padding: 30px;
 }
 
 .controls-bar {
@@ -31,6 +56,9 @@ button {
   font-family: 'Source Code Pro', monospace;
   color: var(--main-cv-text-color);
   font-size: var(--main-cv-text-size);
+  width: 1024px;
+  margin: 0 auto;
+  padding: 30px;
 
   .main {
     width: 65%;
@@ -179,6 +207,7 @@ button {
 
 .user-page {
   width: 100%;
+
   .intro {
     margin-bottom: 20px;
     padding-bottom: 20px;

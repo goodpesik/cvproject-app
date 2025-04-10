@@ -6,6 +6,7 @@ import { ICVDataModel } from '../models/cv-data.model';
 import { apiCvView, apiDownloadPdf } from '../service/api.service';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { HeaderComponent } from './header';
 
 interface ViewCVFormProps {
   id: string;
@@ -43,14 +44,19 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
     <>
       <div className="main-container">
         {controls ? (
-          <div className="controls-bar flex flex-row">
-            <Button variant="outline" onClick={goBack}>
-              Back
-            </Button>
-            <Button variant="outline" onClick={downloadPdf}>
-              Download PDF
-            </Button>
+          <>
+          <HeaderComponent />
+          <div className="wide-container">
+            <div className="controls-bar flex flex-row">
+              <Button variant="outline" onClick={goBack}>
+                Back
+              </Button>
+              <Button variant="outline" onClick={downloadPdf}>
+                Download PDF
+              </Button>
+            </div>
           </div>
+          </>
         ) : (
           ''
         )}

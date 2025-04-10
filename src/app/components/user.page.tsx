@@ -66,48 +66,50 @@ export const UserPageComponent = () => {
   return (
     <>
       <div className="user-page">
-        <div className="flex items-center intro">
-          <div className="image">
-            <Image
-              src={user?.photoURL || '/images/avatar.png'}
-              alt="Photo"
-              width={150}
-              height={150}
-              priority
-              className="rounded-full"
-            />
-          </div>
-          <div className="user">
-            {user?.displayName && (
-              <h1 className="text-2xl font-bold user-name">{user.displayName}</h1>
-            )}
-          </div>
-        </div>
-        <Button variant="outline" onClick={handleCreate}>
-          Create CV
-        </Button>
-        {cvList.length !== 0 &&
-          cvList.map((cv) => (
-            <div key={cv.id} className="cv-list">
-              <div className="cv-item flex flex-row">
-                <span>{cv.name}</span>
-                <Button variant="outline" onClick={() => handleEdit(cv)}>
-                  Edit CV
-                </Button>
-                <Button variant="outline" onClick={() => handleView(cv)}>
-                  View CV
-                </Button>
-                <Button variant="outline" onClick={() => handleRemove(cv)}>
-                  Remove CV
-                </Button>
-                <ConfirmationModal
-                  open={modalOpen}
-                  onOpenChange={setModalOpen}
-                  onContinue={handleConfirm}
-                />
-              </div>
+        <div className="wide-container">
+          <div className="flex items-center intro">
+            <div className="image">
+              <Image
+                src={user?.photoURL || '/images/avatar.png'}
+                alt="Photo"
+                width={150}
+                height={150}
+                priority
+                className="rounded-full"
+              />
             </div>
-          ))}
+            <div className="user">
+              {user?.displayName && (
+                <h1 className="text-2xl font-bold user-name">{user.displayName}</h1>
+              )}
+            </div>
+          </div>
+          <Button variant="outline" onClick={handleCreate}>
+            Create CV
+          </Button>
+          {cvList.length !== 0 &&
+            cvList.map((cv) => (
+              <div key={cv.id} className="cv-list">
+                <div className="cv-item flex flex-row">
+                  <span>{cv.name}</span>
+                  <Button variant="outline" onClick={() => handleEdit(cv)}>
+                    Edit CV
+                  </Button>
+                  <Button variant="outline" onClick={() => handleView(cv)}>
+                    View CV
+                  </Button>
+                  <Button variant="outline" onClick={() => handleRemove(cv)}>
+                    Remove CV
+                  </Button>
+                  <ConfirmationModal
+                    open={modalOpen}
+                    onOpenChange={setModalOpen}
+                    onContinue={handleConfirm}
+                  />
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </>
   );

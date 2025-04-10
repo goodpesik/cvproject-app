@@ -32,6 +32,7 @@ import { IMAGE_URL } from '../lib/api';
 import { ItemModel } from '../models/item.model';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { HeaderComponent } from './header';
 
 interface CVFormProps {
   isEdit: boolean;
@@ -286,7 +287,9 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
 
   return (
     <>
-      <div className="main-container">
+      <HeaderComponent />
+     <div className="cv-from">
+      <div className="wide-container">
         <div className="controls-bar flex flex-row">
           <Button variant="outline" onClick={goBack}>
             Back
@@ -751,6 +754,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
           </form>
         </Form>
       </div>
+     </div>
     </>
   );
 }
