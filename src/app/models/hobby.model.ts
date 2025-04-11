@@ -1,4 +1,4 @@
-import { IconsSettings } from "./icons.settings";
+import { IconsSettings } from './icons.settings';
 
 export interface HobbyModel {
   name: string;

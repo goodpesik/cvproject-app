@@ -8,16 +8,16 @@ const nextConfig: NextConfig = {
     domains: ['lh3.googleusercontent.com'],
     remotePatterns: [
       {
-        protocol: process.env.NEXT_PUBLIC_CONFIG_PROTOCOL as confProtocol ?? 'http',
-        hostname: process.env.NEXT_PUBLIC_CONFIG_HOSTNAME as string ?? 'localhost',
+        protocol: (process.env.NEXT_PUBLIC_CONFIG_PROTOCOL as confProtocol) ?? 'http',
+        hostname: (process.env.NEXT_PUBLIC_CONFIG_HOSTNAME as string) ?? 'localhost',
         port: process.env.NEXT_PUBLIC_CONFIG_PORT ?? '3003',
         pathname: '/uploads/**',
       },
     ],
   },
   webpack(config: any) {
-    const fileLoaderRule = config.module.rules.find(
-      (rule: any) => rule?.test?.toString().includes('svg')
+    const fileLoaderRule = config.module.rules.find((rule: any) =>
+      rule?.test?.toString().includes('svg'),
     );
 
     if (fileLoaderRule) {

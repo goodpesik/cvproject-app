@@ -1,4 +1,4 @@
-import { IconsSettings } from "./icons.settings";
+import { IconsSettings } from './icons.settings';
 
 export enum ContactType {
   Email = 'Email',
@@ -21,7 +21,7 @@ export interface ContactModel {
   link?: string;
 }
 
-export const ContactIconsSettings: { type: ContactType; icon: IconsSettings; }[] = [
+export const ContactIconsSettings: { type: ContactType; icon: IconsSettings }[] = [
   {
     type: ContactType.Email,
     icon: IconsSettings.Mail,

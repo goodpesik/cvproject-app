@@ -46,77 +46,74 @@ import Writing from '../icons/writing.svg';
 import Youtube from '../icons/youtube.svg';
 import { IconsSettings } from '../app/models/icons.settings';
 
-
 type IconProps = {
-    name: IconsSettings | undefined;
-    width?: number;
-    height?: number;
-}
+  name: IconsSettings | undefined;
+  width?: number;
+  height?: number;
+};
 
-export function Icon({ name, width, height}: IconProps) {
-    const IconsMap: {[key: string]: any} = {
-        'Astronomy': Astronomy,
-        'Briefcase': Briefcase,
-        'Cat': Cat,
-        'Cert': Cert,
-        'Check': Check,
-        'Chess': Chess,
-        'Cooking': Cooking,
-        'Cycling': Cycling,
-        'Dancing': Dancing,
-        'Dog': Dog,
-        'Education': Education,
-        'Experience': Experience,
-        'Facebook': Facebook,
-        'Fishing': Fishing,
-        'Gaming': Gaming,
-        'Gardening': Gardening,
-        'Github': Github,
-        'Gitlab': Gitlab,
-        'Globe': Globe,
-        'Heart': Heart,
-        'Hiking': Hiking,
-        'Info': Info,
-        'Instagram': Instagram,
-        'Language': Language,
-        'Linkedin': Linkedin,
-        'Location': LocationIcon,
-        'Mail': Mail,
-        'MessageSquare': MessageSquare,
-        'Music': Music,
-        'Paw': Paw,
-        'Phone': Phone,
-        'Photography': Photography,
-        'Piano': Piano,
-        'PieChart': PieChart,
-        'Reading': Reading,
-        'Robotics': Robotics,
-        'Sport': Sport,
-        'Summary': Summary,
-        'Target': Target,
-        'Text': Text,
-        'Traveling': Traveling,
-        'Twitter': Twitter,
-        'User': User,
-        'Writing': Writing,
-        'Youtube': Youtube
-    };
+export function Icon({ name, width, height }: IconProps) {
+  const IconsMap: { [key: string]: any } = {
+    Astronomy: Astronomy,
+    Briefcase: Briefcase,
+    Cat: Cat,
+    Cert: Cert,
+    Check: Check,
+    Chess: Chess,
+    Cooking: Cooking,
+    Cycling: Cycling,
+    Dancing: Dancing,
+    Dog: Dog,
+    Education: Education,
+    Experience: Experience,
+    Facebook: Facebook,
+    Fishing: Fishing,
+    Gaming: Gaming,
+    Gardening: Gardening,
+    Github: Github,
+    Gitlab: Gitlab,
+    Globe: Globe,
+    Heart: Heart,
+    Hiking: Hiking,
+    Info: Info,
+    Instagram: Instagram,
+    Language: Language,
+    Linkedin: Linkedin,
+    Location: LocationIcon,
+    Mail: Mail,
+    MessageSquare: MessageSquare,
+    Music: Music,
+    Paw: Paw,
+    Phone: Phone,
+    Photography: Photography,
+    Piano: Piano,
+    PieChart: PieChart,
+    Reading: Reading,
+    Robotics: Robotics,
+    Sport: Sport,
+    Summary: Summary,
+    Target: Target,
+    Text: Text,
+    Traveling: Traveling,
+    Twitter: Twitter,
+    User: User,
+    Writing: Writing,
+    Youtube: Youtube,
+  };
 
-    if (!name) {
-      return null;
-    }
+  if (!name) {
+    return null;
+  }
 
-    const SvgIcon = IconsMap[name];
+  const SvgIcon = IconsMap[name];
 
   return (
     <>
-        {
-            SvgIcon ? 
-            <div className="icon">
-                <SvgIcon style={{ width: `${width}px`, height: `${height}px` }} />
-            </div>
-          : null
-        }
+      {SvgIcon ? (
+        <div className="icon">
+          <SvgIcon style={{ width: `${width}px`, height: `${height}px` }} />
+        </div>
+      ) : null}
     </>
   );
-};
+}

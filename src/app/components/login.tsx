@@ -54,21 +54,19 @@ export const LoginComponent = () => {
     setUser(null);
     deleteCookie(COOKIE_AUTH);
     router.push('/');
-  }
+  };
 
   const getContent = () => {
     if (user) {
       return (
-        <Button variant="outline" onClick={() => handleLogout()}>Logout</Button>
-      )
+        <Button variant="outline" onClick={() => handleLogout()}>
+          Logout
+        </Button>
+      );
     } else {
-      return (
-        <GoogleButton onClick={handleLogin} />
-      )
+      return <GoogleButton onClick={handleLogin} />;
     }
-  }
+  };
 
-  return (
-    getContent()
-  );
+  return getContent();
 };

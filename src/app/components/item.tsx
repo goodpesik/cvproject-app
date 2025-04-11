@@ -34,7 +34,7 @@ export default function Item({ item }: { item: ItemModel }) {
     }
   };
 
-  const getContactIcon = (type: ContactType): { name: IconsSettings;} => {
+  const getContactIcon = (type: ContactType): { name: IconsSettings } => {
     const settings = ContactIconsSettings.find((s) => s.type === type);
 
     return {
@@ -42,12 +42,12 @@ export default function Item({ item }: { item: ItemModel }) {
     };
   };
 
-  const getHobbyIcon = (id: string): { url: IconsSettings, alt: string} => {
+  const getHobbyIcon = (id: string): { url: IconsSettings; alt: string } => {
     const settings = hobySettings.find((s) => s.id === id);
 
     return {
       url: settings!.icon,
-      alt: settings!.name
+      alt: settings!.name,
     };
   };
 
@@ -79,7 +79,7 @@ export default function Item({ item }: { item: ItemModel }) {
                 const imageData = getContactIcon(contact.type);
                 return (
                   <li key={i} className="flex items-center">
-                    <Icon name={imageData.name} width={20} height={20}/>
+                    <Icon name={imageData.name} width={20} height={20} />
                     {getText(contact)}
                   </li>
                 );
@@ -133,7 +133,7 @@ export default function Item({ item }: { item: ItemModel }) {
                 return (
                   <li key={i} className="hobbies">
                     <span className="icon">
-                      <Icon name={hobbyIcon.url} width={30} height={30}/> 
+                      <Icon name={hobbyIcon.url} width={30} height={30} />
                     </span>
                     <span className="text">{hobbyIcon.alt}</span>
                   </li>
@@ -191,7 +191,9 @@ export default function Item({ item }: { item: ItemModel }) {
   return (
     <div className="item">
       <h2 className="flex items-center">
-      { getItemSettings()?.icon ?  <Icon name={getItemSettings()?.icon} width={30} height={30}/> : null}
+        {getItemSettings()?.icon ? (
+          <Icon name={getItemSettings()?.icon} width={30} height={30} />
+        ) : null}
         <span className="heading">{getItemSettings()?.title}</span>
       </h2>
       {getItemContent()}

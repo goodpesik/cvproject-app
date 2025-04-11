@@ -50,17 +50,17 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
       <div className="main-container">
         {controls ? (
           <>
-          <HeaderComponent />
-          <div className="wide-container">
-            <div className="controls-bar flex flex-row">
-              <Button variant="outline" onClick={goBack}>
-                Back
-              </Button>
-              <Button variant="outline" onClick={downloadPdf}>
-                Download PDF
-              </Button>
+            <HeaderComponent />
+            <div className="wide-container">
+              <div className="controls-bar flex flex-row">
+                <Button variant="outline" onClick={goBack}>
+                  Back
+                </Button>
+                <Button variant="outline" onClick={downloadPdf}>
+                  Download PDF
+                </Button>
+              </div>
             </div>
-          </div>
           </>
         ) : (
           ''

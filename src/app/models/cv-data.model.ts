@@ -19,11 +19,11 @@ export interface ImageStatus {
 }
 
 export interface CVSettings {
-  bgColor: string,
-  textColor: string,
-  headingsColor: string,
-  font: string,
-  textSize: string
+  bgColor: string;
+  textColor: string;
+  headingsColor: string;
+  font: string;
+  textSize: string;
 }
 
 export const DefaultSettings: CVSettings = {
@@ -31,5 +31,5 @@ export const DefaultSettings: CVSettings = {
   textColor: '#000',
   headingsColor: '#000',
   font: `Source Code Pro`,
-  textSize: '16px'
-}
+  textSize: '16px',
+};
