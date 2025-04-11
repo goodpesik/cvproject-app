@@ -329,9 +329,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
     if (!user) {
       return;
     }
-    if (!cvDataToUse) {
-      return;
-    }
+   
     getCvDataToUse(data);
     setIsPreviewMode(true);
     applySettings(getCvSettings, currentFontLink);
@@ -510,8 +508,15 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
               <Button variant="outline" onClick={goBack}>
                 Back
               </Button>
-              <Button type="submit" variant="outline">
-                  Preview
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  const form = document.getElementById('cv-form') as HTMLFormElement;
+                  form?.requestSubmit();
+                }}
+              >
+                Preview
               </Button>
             </div>
             <h1 className="title">{isEdit ? 'Edit CV' : 'Create CV'}</h1>
@@ -543,10 +548,10 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
               ></ImageSelector>
             )}
             <Form {...form}>
-              <form onSubmit={handleSubmit(goToPreview)} className="space-y-6">
+              <form id="cv-form" onSubmit={handleSubmit(goToPreview)} className="space-y-6">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger className="tooltip-trigger">
+                    <TooltipTrigger asChild className="tooltip-trigger">
                       <Input
                         {...register(`name`)}
                         placeholder="Enter CV name"
@@ -563,7 +568,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                 <div className="cv-row name-section flex flex-row gap-2 border p-2">
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className="tooltip-trigger">
+                      <TooltipTrigger asChild className="tooltip-trigger">
                         <Input
                           {...register(`firstName`)}
                           className={cn(errors.firstName && 'border-red-500 ring-red-500 error')}
@@ -579,7 +584,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                   </TooltipProvider>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className="tooltip-trigger">
+                      <TooltipTrigger asChild className="tooltip-trigger">
                         <Input
                           {...register(`lastName`)}
                           className={cn(errors.lastName && 'border-red-500 ring-red-500 error')}
@@ -643,7 +648,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                           <div className="col">
                             <TooltipProvider>
                               <Tooltip>
-                                <TooltipTrigger className="tooltip-trigger">
+                                <TooltipTrigger asChild className="tooltip-trigger">
                                   <Input
                                     {...register(`contacts.${i}.value`)}
                                     className={cn(
@@ -673,7 +678,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                       <>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               {' '}
                               <Input
                                 {...register(`skills.${i}.name`)}
@@ -720,7 +725,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                       <>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               <Input
                                 {...register(`languages.${i}.name`)}
                                 className={cn(
@@ -767,7 +772,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         <div className="experience-section flex flex-col">
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger className="tooltip-trigger">
+                              <TooltipTrigger asChild className="tooltip-trigger">
                                 <Input
                                   {...register(`experience.${i}.company`)}
                                   className={cn(
@@ -787,7 +792,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                           </TooltipProvider>
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger className="tooltip-trigger">
+                              <TooltipTrigger asChild className="tooltip-trigger">
                                 <Input
                                   {...register(`experience.${i}.role`)}
                                   className={cn(
@@ -812,7 +817,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                           <Input {...register(`experience.${i}.endDate`)} placeholder="End year" />
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger className="tooltip-trigger">
+                              <TooltipTrigger asChild className="tooltip-trigger">
                                 <Textarea
                                   {...register(`experience.${i}.description`)}
                                   placeholder="Description"
@@ -843,7 +848,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                       <>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               <Input
                                 {...register(`education.${i}.school`)}
                                 className={cn(
@@ -863,7 +868,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         </TooltipProvider>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               <Input
                                 {...register(`education.${i}.degree`)}
                                 className={cn(
@@ -883,7 +888,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         </TooltipProvider>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               <Input
                                 {...register(`education.${i}.year`)}
                                 className={cn(
@@ -912,7 +917,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                       <>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger className="tooltip-trigger">
+                            <TooltipTrigger asChild className="tooltip-trigger">
                               <Textarea
                                 {...register(`certifications.${i}.details`)}
                                 className={cn(
