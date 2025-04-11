@@ -7,6 +7,7 @@ import { apiCvView, apiDownloadPdf } from '../service/api.service';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { HeaderComponent } from './header';
+import { applySettings } from '@/lib/utils';
 
 interface ViewCVFormProps {
   id: string;
@@ -19,6 +20,7 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
   const goBack = () => {
     router.push('/');
   };
+  let currentFontLink: HTMLLinkElement | null = null;
   const downloadPdf = async () => {
     const blob = await apiDownloadPdf(`${window.location.origin}${window.location.pathname}`);
     const url = window.URL.createObjectURL(blob);
@@ -33,6 +35,9 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
   useEffect(() => {
     apiCvView(id, true).then((cvData) => {
       setcurrentCvData(cvData.data);
+      if (cvData.data.settings) {
+        applySettings(cvData.data.settings, currentFontLink);
+      }
     });
   }, [id]);
 

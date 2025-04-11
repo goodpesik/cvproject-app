@@ -9,6 +9,7 @@ interface ViewCVFormPage {
 export default async function ViewCVFormPage(props: ViewCVFormPage) {
   const searchParams = await props.searchParams;
   const params = await props.params;
+
   if (!params || !searchParams) {
     return <p>Loading...</p>;
   }

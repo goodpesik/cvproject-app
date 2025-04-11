@@ -3,6 +3,7 @@ import { ContactModel } from './contacts.model';
 import { EducationModel } from './education.model';
 import { ExperienceModel } from './experience.model';
 import { HobbyFormModel } from './hobby.model';
+import { IconsSettings } from './icons.settings';
 import { SkillModel } from './skills.model';
 
 export enum ItemTypes {
@@ -34,63 +35,53 @@ export interface ItemModel {
 export interface ItemSettingsModel {
   type: ItemTypes;
   title: string;
-  icon: string;
-  alt: string;
+  icon: IconsSettings;
 }
 
 export const ItemSettings: ItemSettingsModel[] = [
   {
     type: ItemTypes.Contacts,
     title: 'Contacts',
-    icon: '/icons/globe.svg',
-    alt: 'Contacts',
+    icon: IconsSettings.Globe,
   },
   {
     type: ItemTypes.Skills,
     title: 'Skills',
-    icon: '/icons/pie-chart.svg',
-    alt: 'Skills',
+    icon: IconsSettings.PieChart,
   },
   {
     type: ItemTypes.Education,
     title: 'Education',
-    icon: '/icons/education.svg',
-    alt: 'Education',
+    icon: IconsSettings.Education,
   },
   {
     type: ItemTypes.Hobby,
     title: 'Hobby',
-    icon: '/icons/heart.svg',
-    alt: 'Hobby',
+    icon: IconsSettings.Heart,
   },
   {
     type: ItemTypes.Languages,
     title: 'Languages',
-    icon: '/icons/language.svg',
-    alt: 'Languages',
+    icon: IconsSettings.Language,
   },
   {
     type: ItemTypes.Summary,
     title: 'Summary',
-    icon: '/icons/summary.svg',
-    alt: 'Summary',
+    icon: IconsSettings.Summary,
   },
   {
     type: ItemTypes.Experience,
     title: 'Work Experience',
-    icon: '/icons/experience.svg',
-    alt: 'Experience',
+    icon: IconsSettings.Experience,
   },
   {
     type: ItemTypes.Certifications,
     title: 'Certifications',
-    icon: '/icons/cert.svg',
-    alt: 'Certifications',
+    icon: IconsSettings.Cert,
   },
   {
     type: ItemTypes.Position,
     title: 'Desired Position',
-    icon: '/icons/target.svg',
-    alt: 'Position',
+    icon: IconsSettings.Target,
   },
 ];

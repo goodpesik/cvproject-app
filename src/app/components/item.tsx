@@ -1,11 +1,10 @@
 import { ContactModel, ContactType } from '@/app/models/contacts.model';
 import { ItemModel, ItemSettings, ItemSettingsModel, ItemTypes } from '@/app/models/item.model';
-import Image from 'next/image';
 import { ContactIconsSettings } from '../models/contacts.model';
 import { hobySettings } from '../models/hobby.model';
 import { SkillModel } from '../models/skills.model';
-import { Icon } from './icon';
 import { IconsSettings } from '../models/icons.settings';
+import { Icon } from '@/components/icon';
 
 export default function Item({ item }: { item: ItemModel }) {
   const getText = (contact: ContactModel) => {
@@ -43,12 +42,12 @@ export default function Item({ item }: { item: ItemModel }) {
     };
   };
 
-  const getHobbyIcon = (id: string): { url: string; alt: string } => {
+  const getHobbyIcon = (id: string): { url: IconsSettings, alt: string} => {
     const settings = hobySettings.find((s) => s.id === id);
 
     return {
       url: settings!.icon,
-      alt: settings!.name,
+      alt: settings!.name
     };
   };
 
@@ -80,9 +79,7 @@ export default function Item({ item }: { item: ItemModel }) {
                 const imageData = getContactIcon(contact.type);
                 return (
                   <li key={i} className="flex items-center">
-                    <span className="icon">
-                      <Icon name={imageData.name} width={20} height={20}/>
-                    </span>
+                    <Icon name={imageData.name} width={20} height={20}/>
                     {getText(contact)}
                   </li>
                 );
@@ -136,7 +133,7 @@ export default function Item({ item }: { item: ItemModel }) {
                 return (
                   <li key={i} className="hobbies">
                     <span className="icon">
-                      <Image src={hobbyIcon.url} alt={hobbyIcon.alt} width={20} height={20} />
+                      <Icon name={hobbyIcon.url} width={30} height={30}/> 
                     </span>
                     <span className="text">{hobbyIcon.alt}</span>
                   </li>
@@ -194,15 +191,8 @@ export default function Item({ item }: { item: ItemModel }) {
   return (
     <div className="item">
       <h2 className="flex items-center">
-        <span className="icon">
-          <Image
-            src={getItemSettings()?.icon ?? ''}
-            alt={getItemSettings()?.alt ?? ''}
-            width={30}
-            height={30}
-          />
-        </span>
-        <span className="text">{getItemSettings()?.title}</span>
+      { getItemSettings()?.icon ?  <Icon name={getItemSettings()?.icon} width={30} height={30}/> : null}
+        <span className="heading">{getItemSettings()?.title}</span>
       </h2>
       {getItemContent()}
     </div>

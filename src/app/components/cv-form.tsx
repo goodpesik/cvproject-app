@@ -22,28 +22,39 @@ import { FormSectionKeysEnum } from '../models/form-data.model';
 import * as React from 'react';
 import { hobySettings } from '../models/hobby.model';
 import { useUser } from '../context/user.context';
-import { apiCreateCV, apiGetCVById, apiUpdateCV } from '../service/api.service';
-import { ICVDataModel } from '../models/cv-data.model';
+import { apiCreateCV, apiGetCVById, apiUpdateCV, fetchFonts } from '../service/api.service';
+import { CVSettings, DefaultSettings, ICVDataModel } from '../models/cv-data.model';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ImageSelector } from './image-selector';
 import Image from 'next/image';
 import { IMAGE_URL } from '../lib/api';
 import { ItemModel } from '../models/item.model';
-import { cn } from '@/lib/utils';
+import { applyFont, applySettings, cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HeaderComponent } from './header';
 import { CVBase } from './cv-base';
 import { HexColorPicker } from "react-colorful";
+import { Icon } from '@/components/icon';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+
 
 interface CVFormProps {
   isEdit: boolean;
   cvId: string;
-}
-
-enum FormMode {
-  EditMode,
-  PreviewMode
 }
 
 const contactSchema = z
@@ -167,7 +178,12 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   const [selectedContact, setSelectedContact] = React.useState<{ [key: string]: ContactType }>({});
   const [isPreviewMode, setIsPreviewMode] = React.useState<boolean>(false);
   const [cvDataToUse, setCvDataToUse] = React.useState<ICVDataModel | null>(null);
-  const [bgColor, setBgColor] = React.useState("#000");
+  const [getCvSettings, setCvSettings] = React.useState<CVSettings>({
+    ...DefaultSettings
+  });
+  const [openCombo, setOpenCombo] = React.useState(false)
+  const [search, setSearch] = React.useState("")
+  const [allFonts, setAllFonts] = React.useState<string[]>([])
 
   const {
     register,
@@ -176,10 +192,15 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
     formState: { errors },
   } = form;
 
+  let currentFontLink: HTMLLinkElement | null = null;
+
   useEffect(() => {
     if (isEdit && cvId !== '') {
       apiGetCVById(cvId).then((cvData) => {
         setcurrentCvData(cvData.data);
+        if (cvData.data.settings) {
+          setCvSettings(cvData.data.settings);
+        }
         form.reset({
           name: cvData.data.name,
           imageName: cvData.data.imageName,
@@ -190,7 +211,15 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
         } as FormValues);
       });
     }
+
+     fetchFonts().then(setAllFonts)
   }, [isEdit, cvId, reloadKey]);
+
+  const visibleFonts = search.length > 0
+  ? allFonts.filter(font =>
+      font.toLowerCase().includes(search.toLowerCase())
+    )
+  : allFonts.slice(0, 10);
 
   const renderArraySection = (
     title: string,
@@ -262,6 +291,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
           firstName: data.firstName,
           lastName: data.lastName,
           items: constructedItem as ItemModel,
+          settings: getCvSettings
         }
       );
     } else {
@@ -275,6 +305,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
           firstName: data.firstName,
           lastName: data.lastName,
           createdBy: user!.id,
+          settings: getCvSettings
         } as ICVDataModel
       );
     }
@@ -287,12 +318,21 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
     if (!cvDataToUse) {
       return;
     }
+
+    console.log(1234, getCvSettings);
+    
     
     if (isEdit && currentCvData) {
-      await apiUpdateCV(cvId, cvDataToUse);
+      await apiUpdateCV(cvId, {
+        ...cvDataToUse,
+        settings: getCvSettings
+      });
       toast('CV has been updated successfully');
     } else {
-      await apiCreateCV(cvDataToUse);
+      await apiCreateCV({
+        ...cvDataToUse,
+        settings: getCvSettings
+      });
       toast('CV has been created successfully');
     }
     goBack();
@@ -300,10 +340,8 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
 
   const goToPreview = (data: FormValues) => {
     getCvDataToUse(data);
-    if (!cvDataToUse) {
-      return;
-    }
     setIsPreviewMode(true);
+    applySettings(getCvSettings, currentFontLink);
   }
 
   const goToEdit = () => {
@@ -325,9 +363,51 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   };
 
   const onBgColorChange = (val: string) => {
-    setBgColor(val);
+    setCvSettings({
+      ...getCvSettings,
+      bgColor: val
+    });
     document.documentElement.style.setProperty('--main-cv-bg-color', val);
   }
+
+  const onHeadingsColorChange = (val: string) => {
+    setCvSettings({
+      ...getCvSettings,
+      headingsColor: val
+    });
+    document.documentElement.style.setProperty('--main-cv-headings-color', val);
+  }
+
+  const onTextColorChange = (val: string) => {
+    setCvSettings({
+      ...getCvSettings,
+      textColor: val
+    });
+    document.documentElement.style.setProperty('--main-cv-text-color', val);
+  }
+
+  const onTextSizeChange = (val: string) => {
+    let size = `${val}px`;
+    setCvSettings({
+      ...getCvSettings,
+      textSize: `${val}px`
+    });
+    document.documentElement.style.setProperty('--main-cv-text-size', size);
+  }
+
+  const getFontSize = (): number => {
+    const val = getCvSettings.textSize;
+    return parseFloat(val.slice(0, val.indexOf('px')));
+  }
+
+  const handleFontChange = (fontFamily: string) => {
+    setCvSettings({
+      ...getCvSettings,
+      font: fontFamily
+    });
+    applyFont(currentFontLink, fontFamily);
+  }
+
 
   return (
     <>
@@ -338,7 +418,8 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
              <CVBase cvData={cvDataToUse} />
           </div>
           <div className="preview-controls">
-              <div className="flex flex-row justify-between">
+              <h2>Settings</h2>
+              <div className="flex flex-row justify-between items-center spacing">
                 <Button variant="outline" onClick={goToEdit}>
                   Back
                 </Button>
@@ -346,7 +427,80 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                   Submit
                 </Button>
               </div>
-              <HexColorPicker color={bgColor} onChange={onBgColorChange} />
+              <div className="flex flex-row justify-between items-center spacing">
+                <div>
+                    <h3>Controls Color</h3>
+                    <HexColorPicker color={getCvSettings.bgColor} onChange={onBgColorChange} />
+                </div>
+                <div>
+                    <h3>Headings Color</h3>
+                    <HexColorPicker color={getCvSettings.headingsColor} onChange={onHeadingsColorChange} />
+                </div>
+              </div>
+              <div className="flex flex-row justify-between items-center spacing">
+                <div>
+                    <h3>Text Color</h3>
+                    <HexColorPicker color={getCvSettings.textColor} onChange={onTextColorChange} />
+                </div>
+              </div>
+              <div className='spacing'>
+                <h3>Text size</h3>
+                <p>{getFontSize()}</p>
+                <div className="slider-container">
+                  <Slider
+                    min={10}
+                    max={40}
+                    step={1}
+                    value={[getFontSize()]}
+                    onValueChange={(val) => onTextSizeChange(`${val[0]}`)}
+                  />
+                </div>
+                </div>
+              <div>
+              <h3>Select Font</h3>
+              {visibleFonts.length ? 
+                <Popover open={openCombo} onOpenChange={setOpenCombo}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" aria-expanded={openCombo} className="w-[250px] justify-between">
+                    {getCvSettings.font || "Select font..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[250px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search font..."
+                      value={search}
+                      onValueChange={setSearch}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No fonts found.</CommandEmpty>
+                      <CommandGroup>
+                        {visibleFonts.map((font) => (
+                          <CommandItem
+                            key={font}
+                            value={font}
+                            onSelect={() => {
+                              handleFontChange(font);
+                              setOpenCombo(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                getCvSettings.font === font ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {font}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              : null}
+              </div>
           </div>
         </div> 
       :
@@ -790,8 +944,8 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                               <SelectContent>
                                 {hobySettings.map((val) => (
                                   <SelectItem key={val.id} value={val.id}>
-                                    <div className="flex items-center">
-                                      <img src={val.icon} alt={val.name} className="w-4 h-4 mr-2" />
+                                    <div className="flex items-center select-icon">
+                                      <Icon name={val.icon} width={16} height={16}/>
                                       {val.name}
                                     </div>
                                   </SelectItem>

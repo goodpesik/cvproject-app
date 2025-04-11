@@ -79,3 +79,12 @@ export const apiDownloadPdf = (url: string): Promise<Blob> => {
     })
     .then((res) => res.data);
 };
+
+const GOOGLE_FONTS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_FONTS_KEY;
+const API_URL = `https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_FONTS_API_KEY}`;
+
+export const fetchFonts = async (): Promise<string[]> => {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  return data.items.map((item: any) => item.family as string);
+};

@@ -1,20 +1,23 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+type confProtocol = 'http' | 'https' | undefined;
+
+const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
     domains: ['lh3.googleusercontent.com'],
     remotePatterns: [
       {
-        protocol: process.env.NEXT_PUBLIC_CONFIG_PROTOCOL,
-        hostname: process.env.NEXT_PUBLIC_CONFIG_HOSTNAME,
-        port: process.env.NEXT_PUBLIC_CONFIG_PORT,
+        protocol: process.env.NEXT_PUBLIC_CONFIG_PROTOCOL as confProtocol ?? 'http',
+        hostname: process.env.NEXT_PUBLIC_CONFIG_HOSTNAME as string ?? 'localhost',
+        port: process.env.NEXT_PUBLIC_CONFIG_PORT ?? '3003',
         pathname: '/uploads/**',
       },
     ],
   },
-  webpack(/** @type {import('webpack').Configuration} */ config) {
-    const fileLoaderRule = config.module.rules.find((rule) =>
-      rule?.test?.toString().includes('svg')
+  webpack(config: any) {
+    const fileLoaderRule = config.module.rules.find(
+      (rule: any) => rule?.test?.toString().includes('svg')
     );
 
     if (fileLoaderRule) {
@@ -23,12 +26,27 @@ const nextConfig = {
 
     config.module.rules.push({
       test: /\.svg$/,
-      issuer: { and: [/\.[jt]sx?$/] },
-      use: ['@svgr/webpack'],
+      issuer: /\.[jt]sx?$/,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            svgo: true,
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'removeViewBox',
+                  active: false,
+                },
+              ],
+            },
+          },
+        },
+      ],
     });
 
     return config;
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
