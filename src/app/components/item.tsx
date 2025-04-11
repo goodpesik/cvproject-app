@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { ContactIconsSettings } from '../models/contacts.model';
 import { hobySettings } from '../models/hobby.model';
 import { SkillModel } from '../models/skills.model';
+import { Icon } from './icon';
+import { IconsSettings } from '../models/icons.settings';
 
 export default function Item({ item }: { item: ItemModel }) {
   const getText = (contact: ContactModel) => {
@@ -33,12 +35,11 @@ export default function Item({ item }: { item: ItemModel }) {
     }
   };
 
-  const getContactIcon = (type: ContactType): { url: string; alt: string } => {
+  const getContactIcon = (type: ContactType): { name: IconsSettings;} => {
     const settings = ContactIconsSettings.find((s) => s.type === type);
 
     return {
-      url: settings!.icon,
-      alt: settings!.alt,
+      name: settings!.icon,
     };
   };
 
@@ -80,7 +81,7 @@ export default function Item({ item }: { item: ItemModel }) {
                 return (
                   <li key={i} className="flex items-center">
                     <span className="icon">
-                      <Image src={imageData.url} alt={imageData.alt} width={20} height={20} />
+                      <Icon name={imageData.name} width={20} height={20}/>
                     </span>
                     {getText(contact)}
                   </li>

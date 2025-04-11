@@ -47,6 +47,7 @@
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
     "react": "^19.0.0",
+    "react-colorful": "^5.6.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
     "react-easy-crop": "^5.4.1",
@@ -65,6 +66,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19",

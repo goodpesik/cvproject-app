@@ -1,3 +1,5 @@
+import { IconsSettings } from "./icons.settings";
+
 export enum ContactType {
   Email = 'Email',
   Phone = 'Phone',
@@ -19,60 +21,49 @@ export interface ContactModel {
   link?: string;
 }
 
-export const ContactIconsSettings: { type: ContactType; icon: string; alt: string }[] = [
+export const ContactIconsSettings: { type: ContactType; icon: IconsSettings; }[] = [
   {
     type: ContactType.Email,
-    icon: '/icons/mail.svg',
-    alt: 'email',
+    icon: IconsSettings.Mail,
   },
   {
     type: ContactType.Location,
-    icon: '/icons/location.svg',
-    alt: 'Location',
+    icon: IconsSettings.Location,
   },
   {
     type: ContactType.Phone,
-    icon: '/icons/phone.svg',
-    alt: 'Phone',
+    icon: IconsSettings.Phone,
   },
   {
     type: ContactType.Twitter,
-    icon: '/icons/twitter.svg',
-    alt: 'twitter',
+    icon: IconsSettings.Twitter,
   },
   {
     type: ContactType.LinkedIn,
-    icon: '/icons/linkedin.svg',
-    alt: 'linkedin',
+    icon: IconsSettings.Linkedin,
   },
   {
     type: ContactType.Instagram,
-    icon: '/icons/instagram.svg',
-    alt: 'instagram',
+    icon: IconsSettings.Instagram,
   },
   {
     type: ContactType.Facebook,
-    icon: '/icons/facebook.svg',
-    alt: 'facebook',
+    icon: IconsSettings.Facebook,
   },
   {
     type: ContactType.GitHub,
-    icon: '/icons/github.svg',
-    alt: 'github',
+    icon: IconsSettings.Github,
   },
   {
     type: ContactType.YouTube,
-    icon: '/icons/youtube.svg',
-    alt: 'youtube',
+    icon: IconsSettings.Youtube,
   },
   {
     type: ContactType.GitLab,
-    icon: '/icons/gitlab.svg',
-    alt: 'gitlab',
+    icon: IconsSettings.Gitlab,
   },
   {
     type: ContactType.Text,
-    icon: '/icons/text.svg',
-    alt: 'text',
+    icon: IconsSettings.Text,
   },
 ];
