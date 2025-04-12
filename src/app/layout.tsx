@@ -7,6 +7,13 @@ import { UserProvider } from './context/user.context';
 import { AuthProvider } from './context/auth-context';
 import { Toaster } from '@/components/ui/sonner';
 import { ApiLoadingOverlay } from './components/loader';
+import type { Viewport } from 'next'
+ 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: true
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

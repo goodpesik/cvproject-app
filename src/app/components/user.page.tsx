@@ -88,9 +88,9 @@ export const UserPageComponent = () => {
             Create CV
           </Button>
           {cvList.length !== 0 &&
-            cvList.map((cv) => (
-              <div key={cv.id} className="cv-list">
-                <div className="cv-item flex flex-row">
+            <div className="cv-list">
+              {cvList.map((cv) => (
+                <div key={cv.id} className="cv-item flex flex-row">
                   <span>{cv.name}</span>
                   <Button variant="outline" onClick={() => handleEdit(cv)}>
                     Edit CV
@@ -107,8 +107,9 @@ export const UserPageComponent = () => {
                     onContinue={handleConfirm}
                   />
                 </div>
-              </div>
             ))}
+            </div>
+            }
         </div>
       </div>
     </>

@@ -4,7 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export const HeaderComponent = () => {
+type headerProps = {
+  noLogin?: boolean;
+}
+
+export const HeaderComponent = ({ noLogin }: headerProps) => {
   const router = useRouter();
   const navToRoot = () => {
     router.push('/');
@@ -19,7 +23,7 @@ export const HeaderComponent = () => {
               <h1 className="title">CV Project</h1>
             </Link>
           </div>
-          <LoginComponent />
+          {!noLogin ? <LoginComponent /> : null}
         </div>
       </header>
     </>

@@ -7,3 +7,9 @@ export enum FormSectionKeysEnum {
   Languages = 'Languages section',
   Certifications = 'Certifications section',
 }
+
+export enum FormActions {
+  None,
+  RemovePhoto,
+  Submit
+}

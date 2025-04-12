@@ -11,11 +11,17 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
+export enum ConfirmationModalMode {
+  Warning,
+  Danger
+}
+
 interface ConfirmationModalProps {
   onContinue?: (data: any) => void;
   onClose?: (data: any) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  mode?: ConfirmationModalMode;
 }
 
 export function ConfirmationModal({
@@ -23,13 +29,16 @@ export function ConfirmationModal({
   onClose,
   open,
   onOpenChange,
+  mode = ConfirmationModalMode.Danger
 }: ConfirmationModalProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          { mode === ConfirmationModalMode.Danger ? 
+          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription> : null
+          }
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>

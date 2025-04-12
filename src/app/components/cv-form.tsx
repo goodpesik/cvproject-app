@@ -18,11 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FormSectionKeysEnum } from '../models/form-data.model';
+import { FormActions, FormSectionKeysEnum } from '../models/form-data.model';
 import * as React from 'react';
 import { hobySettings } from '../models/hobby.model';
 import { useUser } from '../context/user.context';
-import { apiCreateCV, apiGetCVById, apiUpdateCV, fetchFonts } from '../service/api.service';
+import { apiCreateCV, apiGetCVById, apiUpdateCV, fetchFonts, removePhoto } from '../service/api.service';
 import { CVSettings, DefaultSettings, ICVDataModel } from '../models/cv-data.model';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import { ConfirmationModal, ConfirmationModalMode } from './confirmation-modal';
 
 interface CVFormProps {
   isEdit: boolean;
@@ -179,7 +180,12 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   const [openCombo, setOpenCombo] = React.useState(false);
   const [search, setSearch] = React.useState('');
   const [allFonts, setAllFonts] = React.useState<string[]>([]);
-
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalMode, setModalMode] = React.useState<ConfirmationModalMode>(ConfirmationModalMode.Danger);
+  const [currentFormAction, setCurrentFormAction] = React.useState<FormActions>(FormActions.None);
+  const [isSettingsOpened, setIsSettingsOpened] = React.useState<boolean>(false);
+  const isSubmitRef = React.useRef(false);
+  
   const {
     register,
     handleSubmit,
@@ -237,6 +243,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
       <Button
         type="button"
         variant="outline"
+        disabled={title === FormSectionKeysEnum.Hobby && hobySettings.length === form.getValues().hobby?.length }
         onClick={() =>
           append(
             title === FormSectionKeysEnum.Skills || title === FormSectionKeysEnum.Languages
@@ -302,6 +309,12 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
   };
 
   const onSubmit = async () => {
+    setCurrentFormAction(FormActions.Submit);
+    setModalMode(ConfirmationModalMode.Warning)
+    setModalOpen(true);
+  };
+
+  const submitConfirmation = async () => {
     if (!user) {
       return;
     }
@@ -323,16 +336,20 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
       toast('CV has been created successfully');
     }
     goBack();
-  };
+  }
 
   const goToPreview = (data: FormValues) => {
     if (!user) {
       return;
     }
-   
     getCvDataToUse(data);
-    setIsPreviewMode(true);
-    applySettings(getCvSettings, currentFontLink);
+
+    if (isSubmitRef.current) {
+      onSubmit();
+    } else {
+      setIsPreviewMode(true);
+      applySettings(getCvSettings, currentFontLink);
+    }
   };
 
   const goToEdit = () => {
@@ -399,24 +416,73 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
     applyFont(currentFontLink, fontFamily);
   };
 
+  const removeImage = () => {
+    setCurrentFormAction(FormActions.RemovePhoto);
+    setModalMode(ConfirmationModalMode.Danger)
+    setModalOpen(true);
+  }
+
+  const handleConfirm = async () => {
+    setModalOpen(false);
+    switch (currentFormAction) {
+      case FormActions.RemovePhoto: {
+        if (currentCvData && currentCvData.imageName && currentCvData._id) {
+          try {
+              await removePhoto(currentCvData.imageName, isEdit, currentCvData._id);
+              setReloadKey((prev) => prev + 1);
+              toast('Photo has been deleted successfully');
+
+            } catch {
+              toast('Error ocurred');
+            }
+        }
+      }
+      break;
+
+      case FormActions.Submit: {
+        submitConfirmation();
+      }
+    
+      default:
+        break;
+    }
+  }
+
   return (
     <>
+      <ConfirmationModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onContinue={handleConfirm}
+        mode={modalMode}
+      />
       <HeaderComponent />
       {isPreviewMode && cvDataToUse ? (
         <div className="preview-section flex flex-row">
           <div className="cv-preview">
             <CVBase cvData={cvDataToUse} />
           </div>
-          <div className="preview-controls">
-            <h2>Settings</h2>
-            <div className="flex flex-row justify-between items-center spacing">
-              <Button variant="outline" onClick={goToEdit}>
-                Back
-              </Button>
-              <Button variant="outline" onClick={onSubmit}>
-                Submit
-              </Button>
+          <div className={`preview-controls ${isSettingsOpened ? 'opened' : ''}`}>
+            <div className="flex flex-row justify-evenly items-center spacing">
+              <div className='flex flex-row items-center'>
+                <Button variant="outline" onClick={goToEdit}>
+                  Back
+                </Button>
+              </div>
+              <div className='flex flex-row items-center'>
+                <Button variant="outline" onClick={onSubmit}>
+                  Submit
+                </Button>
+              </div>
+              <div className='flex flex-row items-center'>
+                <Button variant="outline" onClick={() => {
+                  setIsSettingsOpened(!isSettingsOpened);
+                }}>
+                  {isSettingsOpened ? 'Close Settings' : 'Open Settings'}
+                </Button>
+              </div>
             </div>
+            <h2>Settings</h2>
             <div className="flex flex-row justify-between items-center spacing">
               <div>
                 <h3>Controls Color</h3>
@@ -508,20 +574,34 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
               <Button variant="outline" onClick={goBack}>
                 Back
               </Button>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  const form = document.getElementById('cv-form') as HTMLFormElement;
-                  form?.requestSubmit();
-                }}
-              >
-                Preview
-              </Button>
+              <div className="flex flex-row submit-bar">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    isSubmitRef.current = false;
+                    const form = document.getElementById('cv-form') as HTMLFormElement;
+                    form?.requestSubmit();
+                  }}
+                >
+                  Preview
+                </Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    isSubmitRef.current = true;
+                    const form = document.getElementById('cv-form') as HTMLFormElement;
+                    form?.requestSubmit();
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
             </div>
             <h1 className="title">{isEdit ? 'Edit CV' : 'Create CV'}</h1>
             {imageUrl ? (
-              <div className="image-section">
+              <div className="image-section flex flex-row items-center">
                 <div className="image">
                   <Image
                     src={getImageUrl(imageUrl)}
@@ -532,6 +612,9 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                     className="rounded-full"
                   />
                 </div>
+                <Button variant="outline" onClick={removeImage}>
+                  Remove Image
+                </Button>
               </div>
             ) : (
               <ImageSelector
@@ -954,7 +1037,10 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  {hobySettings.map((val) => (
+                                  {hobySettings.filter(val => {
+                                    const currHobby = form.getValues().hobby!;
+                                    return !currHobby.some(hobby => hobby.iconId === val.id) || val.id === currHobby[i].iconId
+                                  }).map((val) => (
                                     <SelectItem key={val.id} value={val.id}>
                                       <div className="flex items-center select-icon">
                                         <Icon name={val.icon} width={16} height={16} />

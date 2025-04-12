@@ -1,5 +1,15 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
 body {
   font-family: 'Source Code Pro', monospace;
+  height: 100%;
+}
+
+input {
+  font-size: 16px;
 }
 
 // Header
@@ -53,7 +63,8 @@ button {
   margin-bottom: 20px;
   border-radius: 20px;
 
-  > * {
+  > * ,
+  .submit-bar > * {
     margin-right: 20px;
   }
 }
@@ -73,17 +84,24 @@ button {
   }
 
   .preview-controls {
-    position: absolute;
+    position: fixed;
     right: 0;
-    top: 0;
+    top: 160px;
     background: #fff;
-    width: 35%;
+    width: 33%;
     height: 100vh;
     padding: 30px;
+    transform: translateY(72vh);
+    transition: transform 0.3s ease-in-out;
+    border-radius: 25px;
     box-shadow:
       rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
       rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+
+    &.opened {
+      transform: translateY(0);
+    }
 
     h2 {
       font-size: 16px;
@@ -319,7 +337,7 @@ button {
 .image-section {
   margin-bottom: 20px;
   .image {
-    margin: 0;
+    margin: 0 20px 0 0;
   }
 }
 
