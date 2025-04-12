@@ -63,13 +63,28 @@ button {
   margin-bottom: 20px;
   border-radius: 20px;
 
-  > * ,
+  .items > *,
   .submit-bar > * {
     margin-right: 20px;
   }
 }
 
 // Preview
+
+.cv-link {
+  width: 100%;
+}
+
+.copy-box {
+  background: rgb(188, 191, 196, 1);
+  .coppied {
+    background: #1d293d;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    right: 50px;
+  }
+}
 
 .preview-section {
   width: 100%;

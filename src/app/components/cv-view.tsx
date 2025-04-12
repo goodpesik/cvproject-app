@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { HeaderComponent } from './header';
 import { applySettings } from '@/lib/utils';
+import { CopyBox } from './copy-box';
 
 interface ViewCVFormProps {
   id: string;
@@ -45,6 +46,8 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
     return <p>Loading...</p>;
   }
 
+  const getLink = `${window.location.origin}${window.location.pathname}`;
+
   return (
     <>
       <div className="main-container">
@@ -52,13 +55,18 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
           <>
             <HeaderComponent />
             <div className="wide-container">
-              <div className="controls-bar flex flex-row">
-                <Button variant="outline" onClick={goBack}>
-                  Back
-                </Button>
-                <Button variant="outline" onClick={downloadPdf}>
-                  Download PDF
-                </Button>
+              <div className="controls-bar">
+                <div className="items flex flex-row items-center">
+                  <Button variant="outline" onClick={goBack}>
+                    Back
+                  </Button>
+                  <Button variant="outline" onClick={downloadPdf}>
+                    Download PDF
+                  </Button>
+                  <div className="cv-link">
+                    <CopyBox text={getLink} />
+                  </div>
+                </div>
               </div>
             </div>
           </>
