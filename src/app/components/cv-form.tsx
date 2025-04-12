@@ -679,7 +679,6 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild className="tooltip-trigger">
-                              {' '}
                               <Input
                                 {...register(`skills.${i}.name`)}
                                 className={cn(
