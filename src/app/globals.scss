@@ -69,6 +69,10 @@ button {
   }
 }
 
+.submit-bar > * {
+  margin-right: 20px;
+}
+
 // Preview
 
 .cv-link {
@@ -369,7 +373,7 @@ button {
 
 .dialog {
   background: #fff;
-  max-width: 85%;
+  max-width: 450px;
 }
 
 // Slider

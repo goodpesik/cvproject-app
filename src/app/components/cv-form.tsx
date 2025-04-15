@@ -1068,9 +1068,30 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                     )}
                   </div>
                 ))}
-                <Button type="submit" variant="outline">
+                <div className="flex flex-row submit-bar">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    isSubmitRef.current = false;
+                    const form = document.getElementById('cv-form') as HTMLFormElement;
+                    form?.requestSubmit();
+                  }}
+                >
                   Preview
                 </Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    isSubmitRef.current = true;
+                    const form = document.getElementById('cv-form') as HTMLFormElement;
+                    form?.requestSubmit();
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
               </form>
             </Form>
           </div>

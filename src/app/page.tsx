@@ -1,5 +1,5 @@
 import { Landing } from './components/landing-page';
-import { MobileLanding } from './components/mobile-panding';
+import { MobileLanding } from './components/mobile-landing';
 import { headers } from 'next/headers';
 
 export default async function Home() {
