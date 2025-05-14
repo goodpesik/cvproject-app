@@ -4,14 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
-    "next:build": "next build",
-    "next:clean": "rm -rf .next functions/.next functions/lib || true",
-    "next:prepare": "cp -r .next functions/.next",
-    "functions:build": "cd functions && npm run build && cd ..",
-    "build": "npm run next:clean && npm run next:build && npm run next:prepare && npm run functions:build",
-    "deploy": "npm run build && firebase deploy",
-    "deploy:test": "npm run build && firebase emulators:start",
-    "start": "next start",
+    "build": "next build",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "format": "prettier --write ."
   },
