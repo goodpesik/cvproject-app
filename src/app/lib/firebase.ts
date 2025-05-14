@@ -13,8 +13,6 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
-console.log('[FIREBASE CONFIG]', firebaseConfig);
-
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
 let analytics: ReturnType<typeof getAnalytics> | null = null;
