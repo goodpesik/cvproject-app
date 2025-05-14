@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import CVForm from '@/app/components/cv-form';
 
 export default async function CreateCVFormPage() {
