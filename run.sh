@@ -1,5 +1,4 @@
 npm install --legacy-peer-deps
-export $(cat .env.production | xargs)
 npm run build
 pm2 stop cv-project
 pm2 delete cv-project
