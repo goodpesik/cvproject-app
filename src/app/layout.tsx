@@ -8,6 +8,7 @@ import { AuthProvider } from './context/auth-context';
 import { Toaster } from '@/components/ui/sonner';
 import { ApiLoadingOverlay } from './components/loader';
 import type { Viewport } from 'next'
+import { PrimeReactProvider } from 'primereact/api';
  
 export const viewport: Viewport = {
   width: 'device-width',
@@ -54,13 +55,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider>
-          <AuthProvider>
-            <ApiLoadingOverlay />
-            {children}
-          </AuthProvider>
-        </UserProvider>
-        <Toaster />
+        <PrimeReactProvider>
+            <UserProvider>
+              <AuthProvider>
+                <ApiLoadingOverlay />
+                {children}
+              </AuthProvider>
+            </UserProvider>
+            <Toaster />
+        </PrimeReactProvider>
       </body>
     </html>
   );

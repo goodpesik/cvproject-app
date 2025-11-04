@@ -113,13 +113,13 @@ export default function Item({ item }: { item: ItemModel }) {
         const certificationsList = item.certifications || [];
         return (
           <>
-            {certificationsList.map((certifications, i) => (
-              <div key={i} className="work-item container">
-                <div className="description">
-                  <p>{certifications.details}</p>
-                </div>
-              </div>
+            <ul className="list">
+              {certificationsList.map((certifications, i) => (
+              <li key={i} className="flex items-center">
+                  <span className="text">{certifications.details}</span>
+              </li>
             ))}
+            </ul>
           </>
         );
 

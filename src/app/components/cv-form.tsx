@@ -47,7 +47,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { ConfirmationModal, ConfirmationModalMode } from './confirmation-modal';
-
+import { ExperienceFormSection } from './experience-form-section';
 interface CVFormProps {
   isEdit: boolean;
   cvId: string;
@@ -158,7 +158,7 @@ const formSchema = z.object({
   lastName: z.string().min(1),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 export default function CVForm({ isEdit, cvId }: CVFormProps) {
   const form = useForm<FormValues>({
@@ -517,7 +517,7 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
             </div>
             <div>
               <h3>Select Font</h3>
-              {visibleFonts.length ? (
+              {visibleFonts ? (
                 <Popover open={openCombo} onOpenChange={setOpenCombo}>
                   <PopoverTrigger asChild>
                     <Button
@@ -847,83 +847,6 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                     ),
                   },
                   {
-                    key: FormSectionKeysEnum.Experience,
-                    array: experienceArray,
-                    renderFields: (i: number) => (
-                      <>
-                        <div className="experience-section flex flex-col">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild className="tooltip-trigger">
-                                <Input
-                                  {...register(`experience.${i}.company`)}
-                                  className={cn(
-                                    errors.experience &&
-                                      errors.experience[i] &&
-                                      'border-red-500 ring-red-500 error',
-                                  )}
-                                  placeholder="Company"
-                                />
-                              </TooltipTrigger>
-                              {errors.experience && errors.experience[i] && (
-                                <TooltipContent side="top" align="center">
-                                  <p className="error">{errors.experience[i].company?.message}</p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild className="tooltip-trigger">
-                                <Input
-                                  {...register(`experience.${i}.role`)}
-                                  className={cn(
-                                    errors.experience &&
-                                      errors.experience[i] &&
-                                      'border-red-500 ring-red-500 error',
-                                  )}
-                                  placeholder="Role"
-                                />
-                              </TooltipTrigger>
-                              {errors.experience && errors.experience[i] && (
-                                <TooltipContent side="top" align="center">
-                                  <p className="error">{errors.experience[i].role?.message}</p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </TooltipProvider>
-                          <Input
-                            {...register(`experience.${i}.startDate`)}
-                            placeholder="Start year"
-                          />
-                          <Input {...register(`experience.${i}.endDate`)} placeholder="End year" />
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild className="tooltip-trigger">
-                                <Textarea
-                                  {...register(`experience.${i}.description`)}
-                                  placeholder="Description"
-                                  className={cn(
-                                    errors.experience &&
-                                      errors.experience[i] &&
-                                      'border-red-500 ring-red-500 error',
-                                  )}
-                                />
-                              </TooltipTrigger>
-                              {errors.experience && errors.experience[i] && (
-                                <TooltipContent side="top" align="center">
-                                  <p className="error">
-                                    {errors.experience[i].description?.message}
-                                  </p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </>
-                    ),
-                  },
-                  {
                     key: FormSectionKeysEnum.Education,
                     array: educationArray,
                     renderFields: (i: number) => (
@@ -1068,6 +991,11 @@ export default function CVForm({ isEdit, cvId }: CVFormProps) {
                     )}
                   </div>
                 ))}
+                <ExperienceFormSection
+                  control={control}
+                  register={register}
+                  errors={errors}
+                />
                 <div className="flex flex-row submit-bar">
                 <Button
                   variant="outline"
