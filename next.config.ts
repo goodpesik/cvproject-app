@@ -15,6 +15,29 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              svgo: true,
+              svgoConfig: {
+                plugins: [
+                  {
+                    name: 'removeViewBox',
+                    active: false,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: '*.js',
+      },
+    },
+  },
   webpack(config: any) {
     const fileLoaderRule = config.module.rules.find((rule: any) =>
       rule?.test?.toString().includes('svg'),
