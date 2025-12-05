@@ -1,4 +1,4 @@
-npm install --legacy-peer-deps
+npm install
 npm run build
 pm2 stop cv-project
 pm2 delete cv-project
