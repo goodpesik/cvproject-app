@@ -61,7 +61,7 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
                 <div className="items flex flex-row items-center">
                 {controls ? (
                     <>
-                      <Button variant="outline" onClick={goBack}>
+                    <Button variant="outline" onClick={goBack}>
                       Back
                     </Button>
                     <Button variant="outline" onClick={downloadPdf}>
