@@ -33,6 +33,10 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
     a.remove();
     window.URL.revokeObjectURL(url);
   };
+
+  const print = () => {
+    window.print();
+  }
   useEffect(() => {
     apiCvView(id, true).then((cvData) => {
       setcurrentCvData(cvData.data);
@@ -51,28 +55,32 @@ export function ViewCVForm({ id, controls }: ViewCVFormProps) {
   return (
     <>
       <div className="main-container">
-        {controls ? (
-          <>
-            <HeaderComponent />
-            <div className="wide-container">
+      <HeaderComponent />
+      <div className="wide-container no-print">
               <div className="controls-bar">
                 <div className="items flex flex-row items-center">
-                  <Button variant="outline" onClick={goBack}>
-                    Back
-                  </Button>
-                  <Button variant="outline" onClick={downloadPdf}>
-                    Download PDF
-                  </Button>
+                {controls ? (
+                    <>
+                      <Button variant="outline" onClick={goBack}>
+                      Back
+                    </Button>
+                    <Button variant="outline" onClick={downloadPdf}>
+                      Download PDF
+                    </Button>
+                    </>
+                  ) : (
+                    <>  
+                      <Button variant="outline" onClick={print}>
+                              Print/PDF
+                      </Button>
+                    </>
+                  )}
                   <div className="cv-link">
                     <CopyBox text={getLink} />
                   </div>
                 </div>
               </div>
-            </div>
-          </>
-        ) : (
-          ''
-        )}
+          </div>
         <CVBase cvData={currentCvData} />
       </div>
     </>

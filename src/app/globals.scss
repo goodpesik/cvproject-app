@@ -474,6 +474,14 @@ p.error {
   }
 }
 
+// Print
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
 :root {
   --main-cv-bg-color: #000;
   --main-cv-text-color: #000;

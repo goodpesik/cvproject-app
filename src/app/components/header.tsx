@@ -15,7 +15,7 @@ export const HeaderComponent = ({ noLogin }: headerProps) => {
   };
   return (
     <>
-      <header className="header">
+      <header className="header no-print">
         <div className="wide-container flex flex-row items-center justify-between">
           <div className="logo">
             <Link className="flex flex-row items-center" href="/" onClick={navToRoot}>
